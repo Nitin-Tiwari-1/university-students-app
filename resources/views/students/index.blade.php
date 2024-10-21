@@ -1,58 +1,55 @@
 @extends('layouts.app')
 
-@section('title', 'Students List')
+@section('header')
+    <h1 class="text-3xl font-bold text-gray-800">Manage Students</h1>
+@endsection
 
 @section('content')
-    <h1 class="mb-4">Students List</h1>
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-4">
+            <a href="{{ route('students.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition">Add New Student</a>
+            <form method="GET" action="{{ route('students.index') }}" class="flex">
+                <input type="text" name="search" placeholder="Search..." class="border rounded-l-md px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300" value="{{ request('search') }}">
+                <button type="submit" class="bg-blue-600 text-white rounded-r-md px-4 py-2 hover:bg-blue-700 transition">Search</button>
+            </form>
+        </div>
 
-    <div class="mb-3">
-        <form action="{{ route('students.index') }}" method="GET">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Search by student name or class" value="{{ request('search') }}">
-                <button class="btn btn-outline-primary" type="submit">Search</button>
-            </div>
-        </form>
-    </div>
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <table class="min-w-full table-auto">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-700 text-left">
+                        <th class="px-4 py-2">Name</th>
+                        <th class="px-4 py-2">Class Teacher</th>
+                        <th class="px-4 py-2">Class</th>
+                        <th class="px-4 py-2">Admission Date</th>
+                        <th class="px-4 py-2">Yearly Fees</th>
+                        <th class="px-4 py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($students as $student)
+                        <tr class="hover:bg-gray-100 transition">
+                            <td class="border px-4 py-2">{{ $student->student_name }}</td>
+                            <td class="border px-4 py-2">{{ $student->teacher->name }}</td>
+                            <td class="border px-4 py-2">{{ $student->class }}</td>
+                            <td class="border px-4 py-2">{{ $student->admission_date->format('d-m-Y') }}</td>
+                            <td class="border px-4 py-2">{{ number_format($student->yearly_fees, 2) }}</td>
+                            <td class="border px-4 py-2">
+                                <a href="{{ route('students.edit', $student) }}" class="text-blue-600 hover:underline">Edit</a>
+                                <form action="{{ route('students.destroy', $student) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:underline ml-2">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>#</th>
-                <th>Student Name</th>
-                <th>Class</th>
-                <th>Class Teacher</th>
-                <th>Admission Date</th>
-                <th>Yearly Fees</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($students as $student)
-                <tr>
-                    <td>{{ $student->id }}</td>
-                    <td>{{ $student->student_name }}</td>
-                    <td>{{ $student->class }}</td>
-                    <td>{{ $student->teacher->name }}</td>
-                    <td>{{ $student->admission_date->format('d-m-Y') }}</td>
-                    <td>${{ number_format($student->yearly_fees, 2) }}</td>
-                    <td>
-                        <a href="{{ route('students.edit', $student->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                        <form action="{{ route('students.destroy', $student->id) }}" method="POST" style="display: inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="7" class="text-center">No students found.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    <div class="d-flex justify-content-center">
-        {{ $students->links() }}
+        <div class="mt-4">
+            {{ $students->links() }} <!-- Pagination links -->
+        </div>
     </div>
 @endsection

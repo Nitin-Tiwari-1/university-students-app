@@ -11,4 +11,12 @@ class Student extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['student_name', 'class_teacher_id', 'class', 'admission_date', 'yearly_fees'];
+    protected $casts = [
+        'admission_date' => 'datetime', 
+    ];
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class, 'class_teacher_id');
+    }
+
 }
