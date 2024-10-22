@@ -71,7 +71,7 @@
 
         <!-- Page Content -->
         <main>
-            @yield('content') <!-- This line allows child views to insert their content here -->
+            @yield('content')
         </main>
     </div>
 
