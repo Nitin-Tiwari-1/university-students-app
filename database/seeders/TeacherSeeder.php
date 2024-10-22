@@ -8,7 +8,21 @@ class TeacherSeeder extends Seeder
 {
     public function run()
     {
-        Teacher::create(['name' => 'John Doe']);
-        Teacher::create(['name' => 'Jane Smith']);
+        $teachers = [
+            ['name' => 'John Doe'],
+            ['name' => 'Jane Smith'],
+            ['name' => 'Alice Johnson'],
+            ['name' => 'Michael Brown'],
+            ['name' => 'Emily Davis'],
+            ['name' => 'William Garcia'],
+            ['name' => 'Sophia Martinez'],
+            ['name' => 'James Wilson'],
+            ['name' => 'Isabella Anderson'],
+            ['name' => 'Benjamin Thomas'],
+        ];
+
+        foreach ($teachers as $teacher) {
+            Teacher::create($teacher);
+        }
     }
 }

@@ -18,6 +18,7 @@
             <table class="min-w-full table-auto">
                 <thead>
                     <tr class="bg-gray-200 text-gray-700 text-left">
+                        <th class="px-4 py-2">#</th>
                         <th class="px-4 py-2">Name</th>
                         <th class="px-4 py-2">Class Teacher</th>
                         <th class="px-4 py-2">Class</th>
@@ -29,6 +30,7 @@
                 <tbody>
                     @foreach($students as $student)
                         <tr class="hover:bg-gray-100 transition">
+                            <td class="border px-4 py-2">{{ $loop->iteration }}</td>
                             <td class="border px-4 py-2">{{ $student->student_name }}</td>
                             <td class="border px-4 py-2">{{ $student->teacher->name }}</td>
                             <td class="border px-4 py-2">{{ $student->class }}</td>
@@ -36,7 +38,7 @@
                             <td class="border px-4 py-2">{{ number_format($student->yearly_fees, 2) }}</td>
                             <td class="border px-4 py-2">
                                 <a href="{{ route('students.edit', $student) }}" class="text-blue-600 hover:underline">Edit</a>
-                                <form action="{{ route('students.destroy', $student) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('students.destroy', $student) }}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:underline ml-2">Delete</button>
@@ -49,7 +51,13 @@
         </div>
 
         <div class="mt-4">
-            {{ $students->links() }} <!-- Pagination links -->
+            {{ $students->links() }}
         </div>
     </div>
+
+    <script>
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this student?");
+        }
+    </script>
 @endsection

@@ -14,9 +14,16 @@ class StudentController extends Controller
         $this->middleware('auth');
     }
     
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::with('teacher')->paginate(10);
+        $query = Student::with('teacher');
+
+        if ($request->filled('search')) {
+            $query->where('student_name', 'like', '%' . $request->search . '%');
+        }
+
+        $students = $query->paginate(10);
+
         return view('students.index', compact('students'));
     }
 

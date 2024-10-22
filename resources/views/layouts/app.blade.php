@@ -13,9 +13,7 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    
-    
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased">
@@ -29,12 +27,31 @@
                     @endif
                     <a href="{{ route('students.index') }}" class="text-white bg-blue-500 hover:bg-blue-600 rounded-md px-4 py-2 transition duration-300">Students</a>
                 </div>
-                <div class="flex items-center space-x-4">
+
+                <div class="relative">
                     @if (Auth::check())
-                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                            @csrf
-                            <button type="submit" class="text-white bg-red-500 hover:bg-red-600 rounded-md px-4 py-2 transition duration-300">Logout</button>
-                        </form>
+                        <!-- User Dropdown -->
+                        <div class="relative inline-block text-left">
+                            <button id="dropdownUserButton" type="button" class="flex items-center text-white bg-blue-500 hover:bg-blue-600 rounded-md px-4 py-2 transition duration-300" aria-expanded="true" aria-haspopup="true">
+                                {{ Auth::user()->name }} <!-- Display user's name -->
+                                <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+
+                            <!-- Dropdown menu -->
+                            <div id="userDropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 shadow-lg rounded-md py-2 z-10">
+                                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    Profile
+                                </a>
+                                <form action="{{ route('logout') }}" method="POST" class="block">
+                                    @csrf
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                        Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     @else
                         <a href="{{ route('login') }}" class="text-white bg-blue-500 hover:bg-blue-600 rounded-md px-4 py-2 transition duration-300">Login</a>
                         <a href="{{ route('register') }}" class="text-white bg-blue-500 hover:bg-blue-600 rounded-md px-4 py-2 transition duration-300">Register</a>
@@ -70,6 +87,20 @@
     <script>
         $(document).ready(function() {
             $('.table').DataTable();
+        });
+
+        // Dropdown functionality for user menu
+        const dropdownButton = document.getElementById('dropdownUserButton');
+        const dropdownMenu = document.getElementById('userDropdownMenu');
+
+        dropdownButton.addEventListener('click', function() {
+            dropdownMenu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!dropdownButton.contains(event.target)) {
+                dropdownMenu.classList.add('hidden');
+            }
         });
     </script>
     <!-- Chart.js CDN -->
